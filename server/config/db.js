@@ -2,37 +2,59 @@ const mongoose = require('mongoose');
 const Branch = require('../models/Branch');
 const InventoryCategory = require('../models/InventoryCategory');
 
-const connectDB = async () => {
+let listenersAttached = false;
+let connectPromise = null;
+
+// Serverless hosts (Vercel) freeze the whole process between requests, so an
+// idle connection can be silently dropped by the network during a freeze.
+// connectDB() is re-callable: if the connection has dropped, it starts a
+// fresh connect attempt and caches that in-flight promise so concurrent
+// requests during a reconnect share one attempt instead of racing.
+const connectDB = () => {
   const mongoUri = process.env.MONGO_DB_CONNECTION;
   if (!mongoUri) {
     console.error('❌ CRITICAL: MONGO_DB_CONNECTION environment variable missing.');
-    return;
+    return Promise.resolve();
+  }
+
+  if (mongoose.connection.readyState === 1) {
+    return Promise.resolve();
+  }
+
+  if (connectPromise) {
+    return connectPromise;
+  }
+
+  if (!listenersAttached) {
+    listenersAttached = true;
+    mongoose.connection.on('connected', () => {
+      console.log('✅ MongoDB connected successfully');
+      seedDefaultBranch();
+      seedDefaultInventoryCategories();
+    });
+
+    mongoose.connection.on('error', (err) => {
+      console.error(`❌ MongoDB connection error: ${err.message}`);
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      console.warn('⚠️ MongoDB disconnected. Will reconnect on next request.');
+      connectPromise = null;
+    });
   }
 
   const options = {
-    family: 4 // Force IPv4 to prevent connection stalling/slowdowns
+    family: 4, // Force IPv4 to prevent connection stalling/slowdowns
+    serverSelectionTimeoutMS: 8000 // fail/retry fast instead of hanging near the function timeout
   };
 
-  mongoose.connection.on('connected', () => {
-    console.log('✅ MongoDB connected successfully');
-    seedDefaultBranch();
-    seedDefaultInventoryCategories();
-  });
-
-  mongoose.connection.on('error', (err) => {
-    console.error(`❌ MongoDB connection error: ${err.message}`);
-  });
-
-  mongoose.connection.on('disconnected', () => {
-    console.warn('⚠️ MongoDB disconnected. Mongoose will attempt to reconnect automatically.');
-  });
-
-  try {
-    await mongoose.connect(mongoUri, options);
-  } catch (error) {
-    console.error('❌ MongoDB initial connection failed:', error.message);
+  connectPromise = mongoose.connect(mongoUri, options).catch((error) => {
+    console.error('❌ MongoDB connection failed:', error.message);
+    connectPromise = null;
     // Graceful failure - do not crash the application process (Guardrail #6)
-  }
+  });
+
+  return connectPromise;
 };
 
 const seedDefaultBranch = async () => {
