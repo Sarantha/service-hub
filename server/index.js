@@ -33,10 +33,15 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection Guard Middleware (Guardrail #6)
-// Returns 503 Service Unavailable if database is offline for all API calls
-app.use((req, res, next) => {
+// Returns 503 Service Unavailable if database is offline for all API calls.
+// Awaits connectDB() first so a connection dropped during a serverless
+// freeze gets a chance to reconnect before this request is rejected.
+app.use(async (req, res, next) => {
   if (req.path === '/' || req.path === '/health') {
     return next();
+  }
+  if (mongoose.connection.readyState !== 1) {
+    await connectDB();
   }
   if (mongoose.connection.readyState !== 1) {
     const error = new Error('Database service is currently unavailable. Please try again later.');
@@ -68,13 +73,16 @@ app.get('/', (req, res) => {
   res.json({ success: true, message: 'ServiceHub API Server is running.' });
 });
 
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
+  if (mongoose.connection.readyState !== 1) {
+    await connectDB();
+  }
   const dbStatus = mongoose.connection.readyState;
   const statusMap = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
-  res.json({ 
+  res.json({
     success: true,
-    server: 'running', 
-    database: statusMap[dbStatus] 
+    server: 'running',
+    database: statusMap[dbStatus]
   });
 });
 
