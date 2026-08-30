@@ -59,7 +59,7 @@ const VEHICLE_INVENTORY_ITEMS = [
 ]
 
 const StepIndicator = ({ current }) => (
-  <div className="flex items-center bg-white border border-slate-100 rounded-lg px-5 py-3 mb-5">
+  <div className="flex items-center bg-white border border-slate-100 rounded-lg px-5 py-3 mb-5 overflow-x-auto">
     {STEPS.map((label, i) => {
       const isDone = i < current
       const isActive = i === current

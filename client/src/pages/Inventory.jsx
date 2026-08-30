@@ -654,7 +654,7 @@ export const Inventory = () => {
             </>
           }
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <TextInput label="Item Name"  id="ed-name"  defaultValue={editItem.name}      />
             {canSeeCost && (
               <TextInput label="Buying Price" id="ed-buying-price" defaultValue={editItem.buyingPrice ?? ''} type="number" />
