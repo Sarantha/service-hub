@@ -711,7 +711,7 @@ export const Customers = () => {
   return (
     <div className="space-y-[18px]">
       {/* Page Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-[17px] font-semibold text-slate-800">Customers &amp; Vehicles</div>
           <div className="text-[12px] text-slate-500 mt-0.5">Manage customer profiles and linked vehicles</div>
