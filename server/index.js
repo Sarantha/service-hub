@@ -81,6 +81,13 @@ app.get('/health', (req, res) => {
 // Centralized Global Error Handler Middleware
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+// Only bind a port when run directly (local dev / traditional host).
+// When imported as a module (e.g. by a Vercel serverless function), the
+// host platform handles the request lifecycle and this listen() is skipped.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
