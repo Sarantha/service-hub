@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ServiceHub — Dashboard Workspace</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:      #0F2744;
+  --blue:      #0F4C81;
+  --blue-lt:   #1A5C96;
+  --blue-pale: #EEF4FF;
+  --white:     #FFFFFF;
+  --bg:        #F0F4F8;
+  --surface:   #FFFFFF;
+  --surface2:  #F6F8FA;
+  --border:    rgba(0,0,0,0.10);
+  --border2:   rgba(0,0,0,0.16);
+  --text1:     #1A1A2E;
+  --text2:     #4A5568;
+  --text3:     #8A94A6;
+  --success-bg: #EAF7F0; --success-tx: #1A6B44;
+  --warn-bg:    #FFF7E6;  --warn-tx:   #8A5C00;
+  --danger-bg:  #FEF0F0;  --danger-tx: #B91C1C;
+  --info-bg:    #EEF4FF;  --info-tx:   #1A4A7A;
+  --rad:    6px;
+  --rad-lg: 10px;
+}
+
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; background: var(--bg); color: var(--text1); line-height: 1.5; display: flex; min-height: 100vh; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar { width: 204px; background: var(--navy); flex-shrink: 0; display: flex; flex-direction: column; }
+.sidebar-logo { padding: 18px 16px 14px; border-bottom: 0.5px solid rgba(255,255,255,0.10); }
+.sidebar-logo .brand { font-size: 15px; font-weight: 600; color: #fff; }
+.sidebar-logo .sub   { font-size: 10px; color: rgba(255,255,255,0.40); margin-top: 2px; }
+.nav-section  { padding: 10px 0 4px; border-bottom: 0.5px solid rgba(255,255,255,0.07); }
+.nav-label    { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.30); letter-spacing: 0.08em; text-transform: uppercase; padding: 0 16px 5px; }
+.nav-item     { display: flex; align-items: center; gap: 8px; padding: 8px 16px; cursor: pointer; color: rgba(255,255,255,0.52); font-size: 12px; transition: background 0.12s, color 0.12s; border-right: 2px solid transparent; }
+.nav-item:hover  { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.82); }
+.nav-item.active { background: rgba(15,76,129,0.55); color: #fff; border-right-color: #4A9EE8; }
+.nav-item i   { font-size: 15px; width: 18px; flex-shrink: 0; }
+.sidebar-bottom { margin-top: auto; padding: 10px 0; border-top: 0.5px solid rgba(255,255,255,0.10); }
+.user-chip    { display: flex; align-items: center; gap: 8px; padding: 8px 16px; cursor: pointer; text-decoration: none; }
+.user-avatar  { width: 28px; height: 28px; border-radius: 50%; background: #1A4A7A; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; flex-shrink: 0; }
+.user-name    { font-size: 12px; color: rgba(255,255,255,0.78); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role    { font-size: 10px; color: rgba(255,255,255,0.32); }
+
+/* ── MAIN ── */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; }
+.topbar { background: var(--white); border-bottom: 0.5px solid var(--border); padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.topbar-title { font-size: 15px; font-weight: 500; color: var(--text1); flex: 1; }
+.topbar-search { display: flex; align-items: center; gap: 6px; background: var(--surface2); border: 0.5px solid var(--border); border-radius: var(--rad); padding: 6px 10px; width: 240px; }
+.topbar-search i { font-size: 14px; color: var(--text3); }
+.topbar-search input { border: none; background: transparent; outline: none; font-size: 12px; color: var(--text1); width: 100%; }
+.topbar-search input::placeholder { color: var(--text3); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+.icon-btn { width: 32px; height: 32px; border: 0.5px solid var(--border2); border-radius: var(--rad); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text2); }
+.icon-btn:hover { background: var(--surface2); }
+.icon-btn i { font-size: 15px; }
+
+/* ── BUTTONS ── */
+.btn-primary   { display: inline-flex; align-items: center; gap: 5px; padding: 0 14px; height: 32px; background: var(--blue); border: none; border-radius: var(--rad); color: #fff; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+.btn-primary:hover { background: var(--blue-lt); }
+.btn-primary i { font-size: 13px; }
+.btn-secondary { display: inline-flex; align-items: center; gap: 5px; padding: 0 14px; height: 32px; background: var(--white); border: 0.5px solid var(--border2); border-radius: var(--rad); color: var(--text1); font-size: 12px; cursor: pointer; white-space: nowrap; }
+.btn-secondary:hover { background: var(--surface2); }
+.btn-secondary i { font-size: 13px; }
+.btn-sm { height: 26px; padding: 0 10px; font-size: 11px; }
+
+/* ── CONTENT ── */
+.content { flex: 1; padding: 20px 24px; overflow-y: auto; }
+.screen  { display: none; }
+.screen.active { display: block; }
+
+/* ── PAGE HEADER ── */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+.page-title  { font-size: 17px; font-weight: 600; color: var(--text1); }
+.page-sub    { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.page-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ── KPI GRID ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+.kpi-card { background: var(--white); border: 0.5px solid var(--border); border-radius: var(--rad-lg); padding: 14px 16px; }
+.kpi-label { font-size: 11px; color: var(--text2); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.kpi-label i { font-size: 13px; }
+.kpi-value { font-size: 22px; font-weight: 600; color: var(--text1); }
+.kpi-sub   { font-size: 10px; color: var(--text3); margin-top: 3px; }
+.kpi-up    { font-size: 10px; color: var(--success-tx); margin-top: 3px; }
+.kpi-down  { font-size: 10px; color: var(--danger-tx); margin-top: 3px; }
+
+/* ── LAYOUT ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+/* ── CARD ── */
+.card { background: var(--white); border: 0.5px solid var(--border); border-radius: var(--rad-lg); padding: 16px; }
+.card-np { background: var(--white); border: 0.5px solid var(--border); border-radius: var(--rad-lg); }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.card-title  { font-size: 13px; font-weight: 600; color: var(--text1); }
+.card-link   { font-size: 11px; color: var(--blue); cursor: pointer; text-decoration: none; }
+
+/* ── TABLE ── */
+table { width: 100%; border-collapse: collapse; }
+th { font-size: 10px; font-weight: 600; color: var(--text3); text-align: left; padding: 7px 12px; border-bottom: 0.5px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+td { font-size: 12px; color: var(--text1); padding: 9px 12px; border-bottom: 0.5px solid var(--border); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--surface2); }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+.badge-open     { background: var(--info-bg);    color: var(--info-tx); }
+.badge-inprog   { background: #EEF4FF;            color: #1A4A7A; }
+.badge-waiting  { background: var(--warn-bg);    color: var(--warn-tx); }
+.badge-done     { background: var(--success-bg); color: var(--success-tx); }
+.badge-delivered{ background: #F0F4F8;            color: #4A5568; }
+.badge-low      { background: var(--danger-bg);  color: var(--danger-tx); }
+
+/* ── FILTER ROW ── */
+.filter-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-row select { font-size: 12px; padding: 6px 10px; border: 0.5px solid var(--border2); border-radius: var(--rad); background: var(--white); color: var(--text1); outline: none; cursor: pointer; }
+
+/* ── FORM ── */
+.form-grid    { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group   { display: flex; flex-direction: column; gap: 4px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label   { font-size: 11px; font-weight: 600; color: var(--text2); }
+.form-input   { padding: 7px 10px; border: 0.5px solid var(--border2); border-radius: var(--rad); font-size: 12px; background: var(--white); color: var(--text1); outline: none; }
+.form-input:focus { border-color: var(--blue); }
+.form-select  { padding: 7px 10px; border: 0.5px solid var(--border2); border-radius: var(--rad); font-size: 12px; background: var(--white); color: var(--text1); outline: none; }
+.form-textarea { padding: 7px 10px; border: 0.5px solid var(--border2); border-radius: var(--rad); font-size: 12px; background: var(--white); color: var(--text1); resize: vertical; min-height: 70px; font-family: inherit; }
+.section-divider { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin: 4px 0 2px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); grid-column: 1 / -1; }
+
+/* ── PROGRESS STEPS ── */
+.progress-steps { display: flex; align-items: center; gap: 0; margin-bottom: 20px; background: var(--white); border: 0.5px solid var(--border); border-radius: var(--rad-lg); padding: 12px 20px; }
+.step      { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); white-space: nowrap; }
+.step.done { color: var(--success-tx); }
+.step.active { color: var(--blue); font-weight: 600; }
+.step-dot  { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; }
+.step.done .step-dot   { background: var(--success-bg); border-color: var(--success-tx); }
+.step.active .step-dot { background: var(--blue-pale); border-color: var(--blue); }
+.step-line { flex: 1; height: 0.5px; background: var(--border); min-width: 8px; }
+
+/* ── INVENTORY BARS ── */
+.stock-bar  { height: 5px; background: var(--surface2); border-radius: 3px; margin-top: 4px; overflow: hidden; }
+.stock-fill { height: 100%; border-radius: 3px; }
+.fill-ok  { background: #1D9E75; }
+.fill-mid { background: #EF9F27; }
+.fill-bad { background: #E24B4A; }
+
+/* ── INVOICE LINES ── */
+.invoice-line  { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 0.5px solid var(--border); font-size: 12px; }
+.invoice-total { display: flex; justify-content: space-between; padding: 10px 0 0; font-size: 14px; font-weight: 600; color: var(--text1); }
+
+/* ── TASK ITEMS ── */
+.task-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+.task-item:last-child { border-bottom: none; }
+.task-cb { width: 16px; height: 16px; border: 1.5px solid var(--border2); border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; background: var(--white); }
+.task-cb.checked { background: var(--blue); border-color: var(--blue); color: #fff; }
+.task-cb.checked i { font-size: 10px; }
+
+/* ── DETAIL ROWS ── */
+.detail-row   { display: flex; gap: 8px; margin-bottom: 7px; align-items: flex-start; }
+.detail-label { font-size: 11px; color: var(--text2); width: 120px; flex-shrink: 0; padding-top: 1px; }
+.detail-val   { font-size: 12px; color: var(--text1); }
+
+/* ── MINI BAR CHART ── */
+.mini-chart { display: flex; align-items: flex-end; gap: 3px; height: 52px; margin-top: 8px; }
+.bar     { background: #D0E4F5; border-radius: 2px 2px 0 0; flex: 1; cursor: pointer; }
+.bar.hi  { background: var(--blue); }
+.bar:hover { background: var(--blue-lt); }
+
+/* ── TIMELINE ── */
+.timeline-item      { display: flex; gap: 12px; margin-bottom: 14px; }
+.timeline-dot-wrap  { display: flex; flex-direction: column; align-items: center; }
+.timeline-dot       { width: 10px; height: 10px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 3px; }
+.timeline-dot.muted { background: var(--text3); }
+.timeline-line      { width: 1px; flex: 1; background: var(--border); margin-top: 4px; }
+.timeline-body      { flex: 1; padding-bottom: 10px; }
+.timeline-date      { font-size: 10px; color: var(--text3); margin-bottom: 2px; }
+.timeline-title     { font-size: 12px; font-weight: 600; color: var(--text1); }
+.timeline-desc      { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* ── REPORT ROWS ── */
+.report-row  { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid var(--border); }
+.report-row:last-child { border-bottom: none; }
+.report-icon { width: 30px; height: 30px; border-radius: var(--rad); background: var(--surface2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.report-icon i { font-size: 15px; color: var(--text2); }
+
+/* ── PORTAL BANNER ── */
+.portal-banner { background: linear-gradient(130deg, #0F2744 0%, #0F4C81 100%); padding: 22px 24px; border-radius: var(--rad-lg); color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 14px; }
+.portal-banner i.big { font-size: 32px; color: rgba(255,255,255,0.50); }
+.portal-rego { font-size: 22px; font-weight: 700; }
+.portal-make { font-size: 12px; opacity: 0.55; margin-top: 2px; }
+.portal-btn  { display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; height: 32px; background: rgba(255,255,255,0.14); border: 0.5px solid rgba(255,255,255,0.26); border-radius: var(--rad); color: #fff; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.portal-btn:hover { background: rgba(255,255,255,0.22); }
+
+/* ── UPLOAD ZONE ── */
+.upload-zone { border: 1.5px dashed var(--border2); border-radius: var(--rad); padding: 18px; text-align: center; cursor: pointer; color: var(--text2); font-size: 12px; }
+.upload-zone i { font-size: 22px; display: block; margin: 0 auto 6px; color: var(--text3); }
+.upload-zone:hover { border-color: var(--blue); background: var(--blue-pale); }
+
+/* ── NOTIF CHIP ── */
+.reminder-chip { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--surface2); border-radius: var(--rad); font-size: 11px; color: var(--text2); margin-top: 12px; }
+.reminder-chip i { font-size: 14px; color: var(--blue); }
+
+/* ── SETTINGS TOGGLE ── */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 0.5px solid var(--border); font-size: 12px; }
+.toggle-row:last-child { border-bottom: none; }
+
+/* ── SCROLLBAR ── */
+::-webkit-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand"><i class="ti ti-tool" style="font-size:14px;margin-right:4px"></i>ServiceHub</div>
+      <div class="sub">Station Management System</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <div class="nav-item active" id="nav-dashboard" onclick="go('dashboard',this)"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Operations</div>
+      <div class="nav-item" onclick="go('jobcards',this)"><i class="ti ti-file-description"></i>Job Cards</div>
+      <div class="nav-item" onclick="go('appointments',this)"><i class="ti ti-calendar"></i>Appointments</div>
+      <div class="nav-item" onclick="go('customers',this)"><i class="ti ti-users"></i>Customers &amp; Vehicles</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Finance</div>
+      <div class="nav-item" onclick="go('billing',this)"><i class="ti ti-receipt"></i>Billing &amp; Payments</div>
+      <div class="nav-item" onclick="go('reports',this)"><i class="ti ti-chart-bar"></i>Reports</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Stock</div>
+      <div class="nav-item" onclick="go('inventory',this)"><i class="ti ti-package"></i>Inventory</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Customer Portal</div>
+      <div class="nav-item" onclick="go('portal',this)"><i class="ti ti-user-circle"></i>Vehicle History</div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="nav-item" onclick="go('settings',this)"><i class="ti ti-settings"></i>Settings</div>
+      <a href="homepage.html" class="user-chip" title="Click to log out">
+        <div class="user-avatar">RA</div>
+        <div>
+          <div class="user-name">Ravi Amarasinghe</div>
+          <div class="user-role">Super Admin (Log Out)</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-search">
+        <i class="ti ti-search"></i>
+        <input type="text" placeholder="Search customers, vehicles, job cards…" />
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Notifications"><i class="ti ti-bell"></i></button>
+        <button class="icon-btn" title="Help"><i class="ti ti-help"></i></button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="screen active" id="screen-dashboard">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-sub">Sunday, 21 June 2026 — Colombo Main Branch</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn-secondary"><i class="ti ti-building"></i> Switch Branch</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label"><i class="ti ti-currency-dollar"></i> Today's Revenue</div>
+            <div class="kpi-value">LKR 184,500</div>
+            <div class="kpi-up">↑ 12% vs yesterday</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><i class="ti ti-file-description"></i> Jobs In Progress</div>
+            <div class="kpi-value">14</div>
+            <div class="kpi-sub">6 awaiting parts</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><i class="ti ti-check"></i> Completed Today</div>
+            <div class="kpi-value">23</div>
+            <div class="kpi-up">↑ 4 vs target</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label" style="color:#B91C1C"><i class="ti ti-alert-triangle"></i> Low Stock Items</div>
+            <div class="kpi-value" style="color:#B91C1C">8</div>
+            <div class="kpi-sub">Reorder required</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Active Job Cards</div>
+              <span class="card-link" onclick="go('jobcards',null)">View all →</span>
+            </div>
+            <table>
+              <thead><tr><th>Job #</th><th>Vehicle</th><th>Technician</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td style="color:var(--blue);font-weight:600">#JC-1082</td><td>CBB-2341 · Toyota</td><td>Kasun P.</td><td><span class="badge badge-inprog">In Progress</span></td></tr>
+                <tr><td style="color:var(--blue);font-weight:600">#JC-1081</td><td>WP-CAR-4421 · Honda</td><td>Nuwan S.</td><td><span class="badge badge-waiting">Awaiting Parts</span></td></tr>
+                <tr><td style="color:var(--blue);font-weight:600">#JC-1080</td><td>NC-1876 · Nissan</td><td>Priya K.</td><td><span class="badge badge-inprog">In Progress</span></td></tr>
+                <tr><td style="color:var(--blue);font-weight:600">#JC-1079</td><td>CAB-7712 · Suzuki</td><td>Kasun P.</td><td><span class="badge badge-done">Completed</span></td></tr>
+                <tr><td style="color:var(--blue);font-weight:600">#JC-1078</td><td>WP-BA-8901 · Mazda</td><td>Nuwan S.</td><td><span class="badge badge-open">Open</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Revenue — This Week</div></div>
+            <div class="mini-chart">
+              <div class="bar" style="height:42%"></div>
+              <div class="bar" style="height:60%"></div>
+              <div class="bar" style="height:50%"></div>
+              <div class="bar hi" style="height:80%"></div>
+              <div class="bar" style="height:68%"></div>
+              <div class="bar hi" style="height:90%"></div>
+              <div class="bar hi" style="height:76%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:5px">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div style="margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border)">
+              <div style="font-size:11px;color:var(--text2)">Week total</div>
+              <div style="font-size:20px;font-weight:600;margin-top:3px;color:var(--text1)">LKR 1,142,800</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Low Stock Alerts</div>
+              <span class="card-link" onclick="go('inventory',null)">Manage →</span>
+            </div>
+            <table>
+              <thead><tr><th>Item</th><th>SKU</th><th>Stock</th></tr></thead>
+              <tbody>
+                <tr><td>Engine Oil 5W-30 (1L)</td><td>OIL-001</td><td><span class="badge badge-low">3 left</span></td></tr>
+                <tr><td>Air Filter — Toyota</td><td>AF-T22</td><td><span class="badge badge-low">1 left</span></td></tr>
+                <tr><td>Brake Pads (Front)</td><td>BP-F19</td><td><span class="badge badge-low">5 left</span></td></tr>
+                <tr><td>Coolant 1L</td><td>CL-002</td><td><span class="badge badge-low">2 left</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Technician Load</div></div>
+            <div style="display:flex;flex-direction:column;gap:11px;margin-top:4px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span>Kasun Perera</span><span style="color:var(--text2)">5 jobs</span></div>
+                <div class="stock-bar"><div class="stock-fill fill-mid" style="width:83%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span>Nuwan Seneviratne</span><span style="color:var(--text2)">4 jobs</span></div>
+                <div class="stock-bar"><div class="stock-fill fill-ok" style="width:67%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span>Priya Kumari</span><span style="color:var(--text2)">3 jobs</span></div>
+                <div class="stock-bar"><div class="stock-fill fill-ok" style="width:50%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span>Shan Fernando</span><span style="color:var(--text2)">2 jobs</span></div>
+                <div class="stock-bar"><div class="stock-fill fill-ok" style="width:33%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-jobcards">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Job Cards</div>
+            <div class="page-sub">Track and manage all service work orders</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn-secondary"><i class="ti ti-download"></i> Export</button>
+            <button class="btn-primary" onclick="go('newjob',null)"><i class="ti ti-plus"></i> New Job Card</button>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <select><option>All Statuses</option><option>Open</option><option>In Progress</option><option>Awaiting Parts</option><option>Completed</option><option>Delivered</option></select>
+          <select><option>All Technicians</option><option>Kasun Perera</option><option>Nuwan Seneviratne</option><option>Priya Kumari</option><option>Shan Fernando</option></select>
+          <select><option>Today</option><option>This Week</option><option>This Month</option></select>
+        </div>
+
+        <div class="card-np">
+          <table>
+            <thead><tr><th>Job #</th><th>Customer</th><th>Vehicle</th><th>Service Type</th><th>Technician</th><th>Opened</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr style="cursor:pointer" onclick="go('jobdetail',null)"><td style="color:var(--blue);font-weight:600">#JC-1082</td><td>Amara Silva</td><td>CBB-2341 · Toyota Aqua</td><td>Full Service</td><td>Kasun P.</td><td>Today 09:14</td><td><span class="badge badge-inprog">In Progress</span></td><td><button class="btn-secondary btn-sm">Open</button></td></tr>
+              <tr><td style="color:var(--blue);font-weight:600">#JC-1081</td><td>Dinesh Wickrama</td><td>WP-CAR-4421 · Honda Fit</td><td>Brake Replacement</td><td>Nuwan S.</td><td>Today 08:30</td><td><span class="badge badge-waiting">Awaiting Parts</span></td><td><button class="btn-secondary btn-sm">Open</button></td></tr>
+              <tr><td style="color:var(--blue);font-weight:600">#JC-1080</td><td>Latha Fernando</td><td>NC-1876 · Nissan Note</td><td>Engine Diagnostics</td><td>Priya K.</td><td>Today 08:00</td><td><span class="badge badge-inprog">In Progress</span></td><td><button class="btn-secondary btn-sm">Open</button></td></tr>
+              <tr><td style="color:var(--blue);font-weight:600">#JC-1079</td><td>Roshan Perera</td><td>CAB-7712 · Suzuki Alto</td><td>Oil Change</td><td>Kasun P.</td><td>Yesterday</td><td><span class="badge badge-done">Completed</span></td><td><button class="btn-secondary btn-sm">Open</button></td></tr>
+              <tr><td style="color:var(--blue);font-weight:600">#JC-1078</td><td>Malini Rajapaksa</td><td>WP-BA-8901 · Mazda Axela</td><td>AC Service</td><td>—</td><td>Yesterday</td><td><span class="badge badge-open">Open</span></td><td><button class="btn-secondary btn-sm">Open</button></td></tr>
+              <tr><td style="color:var(--blue);font-weight:600">#JC-1077</td><td>Chamara Mendis</td><td>SB-4401 · Toyota Prius</td><td>Full Service</td><td>Shan F.</td><td>Jun 20</td><td><span class="badge badge-delivered">Delivered</span></td><td><button class="btn-secondary btn-sm">Open</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-newjob">
+        <div class="page-header">
+          <div>
+            <div class="page-title">New Job Card</div>
+            <div class="page-sub">Vehicle intake and work order creation</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn-secondary" onclick="go('jobcards',null)">Cancel</button>
+            <button class="btn-primary"><i class="ti ti-device-floppy"></i> Save &amp; Print</button>
+          </div>
+        </div>
+
+        <div class="progress-steps">
+          <div class="step active"><div class="step-dot">1</div>Vehicle intake</div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-dot">2</div>Issue details</div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-dot">3</div>Estimate</div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-dot">4</div>Assign technician</div>
+        </div>
+
+        <div class="card">
+          <div class="form-grid">
+            <div class="section-divider">Customer &amp; Vehicle</div>
+            <div class="form-group"><label class="form-label">Customer name</label><input class="form-input" type="text" placeholder="Type name or phone to search" /></div>
+            <div class="form-group"><label class="form-label">Phone number</label><input class="form-input" type="text" placeholder="+94 7X XXX XXXX" /></div>
+            <div class="form-group"><label class="form-label">Registration number</label><input class="form-input" type="text" placeholder="e.g. WP CAR-1234" /></div>
+            <div class="form-group"><label class="form-label">VIN (optional)</label><input class="form-input" type="text" placeholder="Vehicle Identification Number" /></div>
+            <div class="form-group"><label class="form-label">Make &amp; Model</label><input class="form-input" type="text" placeholder="e.g. Toyota Aqua" /></div>
+            <div class="form-group"><label class="form-label">Year</label><input class="form-input" type="text" placeholder="e.g. 2019" /></div>
+            <div class="form-group"><label class="form-label">Fuel type</label><select class="form-select"><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Electric</option></select></div>
+            <div class="form-group"><label class="form-label">Odometer (km)</label><input class="form-input" type="text" placeholder="e.g. 48,200" /></div>
+
+            <div class="section-divider">Job Details</div>
+            <div class="form-group full"><label class="form-label">Customer-reported issues</label><textarea class="form-textarea" placeholder="Describe what the customer reports…"></textarea></div>
+            <div class="form-group"><label class="form-label">Service type</label><select class="form-select"><option>Full Service</option><option>Oil Change</option><option>Brake Service</option><option>AC Service</option><option>Engine Diagnostics</option><option>Other</option></select></div>
+            <div class="form-group"><label class="form-label">Priority</label><select class="form-select"><option>Normal</option><option>Urgent</option></select></div>
+            <div class="form-group full"><label class="form-label">Vehicle condition photos</label><div class="upload-zone"><i class="ti ti-camera"></i>Click to attach photos or drag files here</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-jobdetail">
+        <div class="page-header">
+          <div>
+            <div class="page-title">#JC-1082 — Amara Silva · CBB-2341</div>
+            <div class="page-sub">Toyota Aqua 2019 · Full Service · Opened 21 Jun 2026 09:14</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn-secondary" onclick="go('jobcards',null)"><i class="ti ti-arrow-left"></i> Back</button>
+            <button class="btn-secondary"><i class="ti ti-send"></i> Send Estimate</button>
+            <button class="btn-primary"><i class="ti ti-receipt"></i> Create Invoice</button>
+          </div>
+        </div>
+
+        <div class="progress-steps">
+          <div class="step done"><div class="step-dot"><i class="ti ti-check" style="font-size:9px"></i></div>Open</div>
+          <div class="step-line"></div>
+          <div class="step active"><div class="step-dot" style="font-size:11px">●</div>In Progress</div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-dot">3</div>Awaiting parts</div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-dot">4</div>Completed</div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-dot">5</div>Delivered</div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px">Job details</div>
+            <div class="detail-row"><span class="detail-label">Customer</span><span class="detail-val">Amara Silva — 077 123 4567</span></div>
+            <div class="detail-row"><span class="detail-label">Vehicle</span><span class="detail-val">CBB-2341 · Toyota Aqua 2019 · Hybrid</span></div>
+            <div class="detail-row"><span class="detail-label">Odometer</span><span class="detail-val">48,200 km</span></div>
+            <div class="detail-row"><span class="detail-label">Reported issues</span><span class="detail-val">Engine light on, oil change due, AC not cooling</span></div>
+            <div class="detail-row"><span class="detail-label">Service advisor</span><span class="detail-val">Saman Rathnayake</span></div>
+            <div class="detail-row"><span class="detail-label">Technician</span><span class="detail-val">Kasun Perera</span></div>
+            <div style="margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border)">
+              <div class="card-title" style="margin-bottom:8px">Task checklist</div>
+              <div class="task-item"><div class="task-cb checked"><i class="ti ti-check"></i></div><span style="font-size:12px">Engine oil change (5W-30)</span></div>
+              <div class="task-item"><div class="task-cb checked"><i class="ti ti-check"></i></div><span style="font-size:12px">Oil filter replacement</span></div>
+              <div class="task-item"><div class="task-cb"></div><span style="font-size:12px">AC gas top-up &amp; filter clean</span></div>
+              <div class="task-item"><div class="task-cb"></div><span style="font-size:12px">Engine diagnostics scan</span></div>
+              <div class="task-item"><div class="task-cb"></div><span style="font-size:12px">Tyre pressure check</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px">Parts &amp; Labour</div>
+            <div class="invoice-line"><span>Engine Oil 5W-30 (3L)</span><span>LKR 2,400</span></div>
+            <div class="invoice-line"><span>Oil Filter (OEM)</span><span>LKR 850</span></div>
+            <div class="invoice-line"><span>AC Refrigerant R134a</span><span>LKR 1,600</span></div>
+            <div class="invoice-line"><span>Labour — Full service (2h)</span><span>LKR 3,000</span></div>
+            <div class="invoice-line" style="color:var(--text2)"><span>+ Add part or labour</span><span style="color:var(--blue);cursor:pointer;font-size:16px">＋</span></div>
+            <div style="height:10px"></div>
+            <div class="invoice-line"><span style="color:var(--text2)">Subtotal</span><span>LKR 7,850</span></div>
+            <div class="invoice-line"><span style="color:var(--text2)">VAT (18%)</span><span>LKR 1,413</span></div>
+            <div class="invoice-total"><span>Estimated total</span><span>LKR 9,263</span></div>
+            <div style="margin-top:14px">
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:var(--warn-bg);border-radius:20px;font-size:10px;font-weight:600;color:var(--warn-tx)"><i class="ti ti-clock" style="font-size:12px"></i>Awaiting customer approval</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-customers">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Customers &amp; Vehicles</div>
+            <div class="page-sub">Manage customer profiles and linked vehicles</div>
+          </div>
+          <button class="btn-primary"><i class="ti ti-plus"></i> Add Customer</button>
+        </div>
+        <div class="filter-row">
+          <select><option>All customers</option><option>Active this month</option><option>No recent visits</option></select>
+        </div>
+        <div class="card-np">
+          <table>
+            <thead><tr><th>Customer</th><th>Phone</th><th>Vehicles</th><th>Last Visit</th><th>Outstanding</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Amara Silva</strong></td><td>077 123 4567</td><td>2 vehicles</td><td>Today</td><td style="color:var(--success-tx)">—</td><td><button class="btn-secondary btn-sm">View</button></td></tr>
+              <tr><td><strong>Dinesh Wickrama</strong></td><td>071 234 5678</td><td>1 vehicle</td><td>Today</td><td style="color:var(--danger-tx)">LKR 4,200</td><td><button class="btn-secondary btn-sm">View</button></td></tr>
+              <tr><td><strong>Latha Fernando</strong></td><td>075 345 6789</td><td>1 vehicle</td><td>Today</td><td style="color:var(--success-tx)">—</td><td><button class="btn-secondary btn-sm">View</button></td></tr>
+              <tr><td><strong>Roshan Perera</strong></td><td>076 456 7890</td><td>3 vehicles</td><td>Jun 20</td><td style="color:var(--success-tx)">—</td><td><button class="btn-secondary btn-sm">View</button></td></tr>
+              <tr><td><strong>Malini Rajapaksa</strong></td><td>070 567 8901</td><td>2 vehicles</td><td>Jun 19</td><td style="color:var(--success-tx)">—</td><td><button class="btn-secondary btn-sm">View</button></td></tr>
+              <tr><td><strong>Chamara Mendis</strong></td><td>078 678 9012</td><td>1 vehicle</td><td>Jun 20</td><td style="color:var(--success-tx)">—</td><td><button class="btn-secondary btn-sm">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-appointments">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Appointments</div>
+            <div class="page-sub">Upcoming bookings and scheduling</div>
+          </div>
+          <button class="btn-primary"><i class="ti ti-plus"></i> Book Appointment</button>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px">Today — 21 June</div>
+            <div class="timeline-item">
+              <div class="timeline-dot-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-body"><div class="timeline-date">09:00 AM</div><div class="timeline-title">Amara Silva — Full Service</div><div class="timeline-desc">CBB-2341 · Toyota Aqua · Kasun P.</div></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-body"><div class="timeline-date">10:30 AM</div><div class="timeline-title">Malini Rajapaksa — AC Service</div><div class="timeline-desc">WP-BA-8901 · Mazda Axela · Unassigned</div></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-body"><div class="timeline-date">02:00 PM</div><div class="timeline-title">Pradeep Jayawardena — Brake Check</div><div class="timeline-desc">WP-KA-3300 · Toyota Vitz · Nuwan S.</div></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot-wrap"><div class="timeline-dot muted"></div></div>
+              <div class="timeline-body"><div class="timeline-date">04:00 PM</div><div class="timeline-title">Nishantha Kulatunge — Oil Change</div><div class="timeline-desc">SG-4421 · Suzuki Wagon R · Priya K.</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px">Upcoming — Jun 22–25</div>
+            <table>
+              <thead><tr><th>Date &amp; Time</th><th>Customer</th><th>Service</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Jun 22 · 09:00</td><td>Ravi Nonis</td><td>Full Service</td><td><span class="badge badge-open">Booked</span></td></tr>
+                <tr><td>Jun 22 · 11:00</td><td>Sunita Perera</td><td>Engine Diag.</td><td><span class="badge badge-open">Booked</span></td></tr>
+                <tr><td>Jun 23 · 10:00</td><td>Asoka Siriwardena</td><td>Tyre Change</td><td><span class="badge badge-open">Booked</span></td></tr>
+                <tr><td>Jun 24 · 09:30</td><td>Kumari Wijesinghe</td><td>AC Service</td><td><span class="badge badge-open">Booked</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-inventory">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Inventory</div>
+            <div class="page-sub">Spare parts, consumables, and stock levels</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn-secondary"><i class="ti ti-file-export"></i> Export</button>
+            <button class="btn-secondary"><i class="ti ti-truck"></i> Purchase Order</button>
+            <button class="btn-primary"><i class="ti ti-plus"></i> Add Item</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-label">Total SKUs</div><div class="kpi-value">348</div></div>
+          <div class="kpi-card"><div class="kpi-label">Stock value</div><div class="kpi-value">LKR 2.4M</div></div>
+          <div class="kpi-card"><div class="kpi-label" style="color:var(--danger-tx)"><i class="ti ti-alert-triangle"></i> Low stock</div><div class="kpi-value" style="color:var(--danger-tx)">8</div></div>
+          <div class="kpi-card"><div class="kpi-label">Expiring soon</div><div class="kpi-value">3</div><div class="kpi-sub">Within 30 days</div></div>
+        </div>
+
+        <div class="filter-row">
+          <select><option>All categories</option><option>Oils &amp; Fluids</option><option>Filters</option><option>Brakes</option><option>Electrical</option><option>Body Parts</option></select>
+          <select><option>All stock levels</option><option>Low stock only</option><option>In stock</option></select>
+        </div>
+
+        <div class="card-np">
+          <table>
+            <thead><tr><th>SKU</th><th>Item name</th><th>Category</th><th>Unit price</th><th>In stock</th><th>Reorder at</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>OIL-001</td><td>Engine Oil 5W-30 (1L)</td><td>Oils &amp; Fluids</td><td>LKR 800</td><td>3</td><td>10</td><td><span class="badge badge-low">Low</span></td><td><button class="btn-secondary btn-sm">Reorder</button></td></tr>
+              <tr><td>AF-T22</td><td>Air Filter — Toyota</td><td>Filters</td><td>LKR 1,200</td><td>1</td><td>5</td><td><span class="badge badge-low">Low</span></td><td><button class="btn-secondary btn-sm">Reorder</button></td></tr>
+              <tr><td>BP-F19</td><td>Brake Pads (Front)</td><td>Brakes</td><td>LKR 3,400</td><td>5</td><td>8</td><td><span class="badge badge-low">Low</span></td><td><button class="btn-secondary btn-sm">Reorder</button></td></tr>
+              <tr><td>SP-001</td><td>Spark Plug — NGK</td><td>Electrical</td><td>LKR 450</td><td>48</td><td>20</td><td><span class="badge badge-done">OK</span></td><td><button class="btn-secondary btn-sm">Edit</button></td></tr>
+              <tr><td>CL-002</td><td>Coolant 1L</td><td>Oils &amp; Fluids</td><td>LKR 950</td><td>2</td><td>8</td><td><span class="badge badge-low">Low</span></td><td><button class="btn-secondary btn-sm">Reorder</button></td></tr>
+              <tr><td>WP-H12</td><td>Wiper Blade — Honda</td><td>Body Parts</td><td>LKR 680</td><td>22</td><td>10</td><td><span class="badge badge-done">OK</span></td><td><button class="btn-secondary btn-sm">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-billing">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Billing &amp; Payments</div>
+            <div class="page-sub">Invoices, receipts, and outstanding balances</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn-secondary"><i class="ti ti-download"></i> Export</button>
+            <button class="btn-primary"><i class="ti ti-plus"></i> New Invoice</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-label">Today's receipts</div><div class="kpi-value">LKR 184,500</div></div>
+          <div class="kpi-card"><div class="kpi-label" style="color:var(--danger-tx)">Outstanding balances</div><div class="kpi-value" style="color:var(--danger-tx)">LKR 31,200</div><div class="kpi-sub">4 customers</div></div>
+          <div class="kpi-card"><div class="kpi-label">Invoices this month</div><div class="kpi-value">218</div></div>
+          <div class="kpi-card"><div class="kpi-label">Avg. invoice value</div><div class="kpi-value">LKR 8,470</div></div>
+        </div>
+
+        <div class="card-np">
+          <table>
+            <thead><tr><th>Invoice #</th><th>Customer</th><th>Job Card</th><th>Date</th><th>Amount</th><th>Method</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--blue);font-weight:600">INV-2241</td><td>Roshan Perera</td><td>#JC-1079</td><td>Jun 21</td><td>LKR 9,100</td><td>Card</td><td><span class="badge badge-done">Paid</span></td><td><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i> PDF</button></td></tr>
+              <tr><td style="color:var(--blue);font-weight:600">INV-2240</td><td>Dinesh Wickrama</td><td>#JC-1081</td><td>Jun 21</td><td>LKR 4,200</td><td>—</td><td><span class="badge badge-low">Unpaid</span></td><td><button class="btn-secondary btn-sm">Collect</button></td></tr>
+              <tr><td style="color:var(--blue);font-weight:600">INV-2239</td><td>Chamara Mendis</td><td>#JC-1077</td><td>Jun 20</td><td>LKR 14,600</td><td>Cash</td><td><span class="badge badge-done">Paid</span></td><td><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i> PDF</button></td></tr>
+              <tr><td style="color:var(--blue);font-weight:600">INV-2238</td><td>Amara Silva</td><td>#JC-1076</td><td>Jun 20</td><td>LKR 6,500</td><td>Online</td><td><span class="badge badge-done">Paid</span></td><td><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i> PDF</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-reports">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Reports &amp; Analytics</div>
+            <div class="page-sub">Generate and export business reports</div>
+          </div>
+          <select style="font-size:12px;padding:6px 10px;border:0.5px solid var(--border2);border-radius:var(--rad);background:var(--white);color:var(--text1)"><option>This Month</option><option>Last Month</option><option>This Year</option><option>Custom range</option></select>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-label">Monthly revenue</div><div class="kpi-value">LKR 4.2M</div><div class="kpi-up">↑ 8% vs last month</div></div>
+          <div class="kpi-card"><div class="kpi-label">Jobs completed</div><div class="kpi-value">412</div></div>
+          <div class="kpi-card"><div class="kpi-label">Parts consumed</div><div class="kpi-value">LKR 1.8M</div></div>
+          <div class="kpi-card"><div class="kpi-label">Gross profit</div><div class="kpi-value">LKR 2.4M</div><div class="kpi-sub">~57% margin</div></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px">Available reports</div>
+            <div class="report-row"><div class="report-icon"><i class="ti ti-chart-bar"></i></div><div style="flex:1"><div style="font-size:12px;font-weight:600">Sales &amp; Revenue</div><div style="font-size:11px;color:var(--text2)">Daily, weekly, monthly breakdown</div></div><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i> PDF</button></div>
+            <div class="report-row"><div class="report-icon"><i class="ti ti-users"></i></div><div style="flex:1"><div style="font-size:12px;font-weight:600">Technician Productivity</div><div style="font-size:11px;color:var(--text2)">Jobs per tech, hours, efficiency</div></div><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i> PDF</button></div>
+            <div class="report-row"><div class="report-icon"><i class="ti ti-package"></i></div><div style="flex:1"><div style="font-size:12px;font-weight:600">Inventory Consumption</div><div style="font-size:11px;color:var(--text2)">Parts used, supplier costs, GRNs</div></div><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i> XLS</button></div>
+            <div class="report-row"><div class="report-icon"><i class="ti ti-receipt"></i></div><div style="flex:1"><div style="font-size:12px;font-weight:600">Outstanding Balances</div><div style="font-size:11px;color:var(--text2)">Unpaid invoices, credit balances</div></div><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i> PDF</button></div>
+            <div class="report-row"><div class="report-icon"><i class="ti ti-car"></i></div><div style="flex:1"><div style="font-size:12px;font-weight:600">Vehicle Service Frequency</div><div style="font-size:11px;color:var(--text2)">Most serviced models, repeat visits</div></div><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i> XLS</button></div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px">Technician performance — June</div>
+            <table>
+              <thead><tr><th>Technician</th><th>Jobs</th><th>Avg. time</th><th>Rating</th></tr></thead>
+              <tbody>
+                <tr><td>Kasun Perera</td><td>128</td><td>1h 42m</td><td>★ 4.8</td></tr>
+                <tr><td>Nuwan Seneviratne</td><td>104</td><td>1h 55m</td><td>★ 4.6</td></tr>
+                <tr><td>Priya Kumari</td><td>96</td><td>2h 10m</td><td>★ 4.7</td></tr>
+                <tr><td>Shan Fernando</td><td>84</td><td>2h 05m</td><td>★ 4.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-portal">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Vehicle Owner Portal</div>
+            <div class="page-sub">Self-service history and document downloads</div>
+          </div>
+        </div>
+
+        <div class="portal-banner">
+          <i class="ti ti-car big"></i>
+          <div style="flex:1">
+            <div class="portal-rego">CBB-2341</div>
+            <div class="portal-make">Toyota Aqua 2019 · Hybrid · Amara Silva</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="portal-btn"><i class="ti ti-download" style="font-size:13px"></i> Full history PDF</button>
+            <button class="portal-btn"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Book service</button>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="kpi-card"><div class="kpi-label">Total services</div><div class="kpi-value">18</div></div>
+          <div class="kpi-card"><div class="kpi-label">Last service</div><div class="kpi-value" style="font-size:16px">21 Jun 2026</div></div>
+          <div class="kpi-card"><div class="kpi-label">Next service due</div><div class="kpi-value" style="font-size:16px;color:var(--blue)">Sep 2026</div></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px">Service history</div>
+            <div class="timeline-item">
+              <div class="timeline-dot-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-body"><div class="timeline-date">21 Jun 2026 · 48,200 km</div><div class="timeline-title">Full service — Oil, Filters, AC</div><div class="timeline-desc">LKR 9,263 · Invoice INV-2241</div></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-body"><div class="timeline-date">14 Mar 2026 · 44,100 km</div><div class="timeline-title">Brake pad replacement (front)</div><div class="timeline-desc">LKR 7,200 · Invoice INV-2104</div></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot-wrap"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+              <div class="timeline-body"><div class="timeline-date">02 Dec 2025 · 40,600 km</div><div class="timeline-title">Full service — Oil, Air filter, Tyres</div><div class="timeline-desc">LKR 8,900 · Invoice INV-1987</div></div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot-wrap"><div class="timeline-dot muted"></div></div>
+              <div class="timeline-body"><div class="timeline-date">15 Aug 2025 · 36,400 km</div><div class="timeline-title">Engine diagnostics + coolant top-up</div><div class="timeline-desc">LKR 4,100 · Invoice INV-1812</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px">Past invoices</div>
+            <table>
+              <thead><tr><th>Invoice</th><th>Date</th><th>Amount</th><th></th></tr></thead>
+              <tbody>
+                <tr><td style="color:var(--blue)">INV-2241</td><td>Jun 21, 2026</td><td>LKR 9,263</td><td><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i></button></td></tr>
+                <tr><td style="color:var(--blue)">INV-2104</td><td>Mar 14, 2026</td><td>LKR 7,200</td><td><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i></button></td></tr>
+                <tr><td style="color:var(--blue)">INV-1987</td><td>Dec 02, 2025</td><td>LKR 8,900</td><td><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i></button></td></tr>
+                <tr><td style="color:var(--blue)">INV-1812</td><td>Aug 15, 2025</td><td>LKR 4,100</td><td><button class="btn-secondary btn-sm"><i class="ti ti-download" style="font-size:11px"></i></button></td></tr>
+              </tbody>
+            </table>
+            <div class="reminder-chip"><i class="ti ti-bell"></i>Next service reminder set for <strong style="color:var(--text1)">September 2026</strong>. SMS 2 weeks before.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-settings">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Settings</div>
+            <div class="page-sub">System configuration and administration</div>
+          </div>
+          <button class="btn-primary"><i class="ti ti-device-floppy"></i> Save Changes</button>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px"><i class="ti ti-building" style="font-size:13px;margin-right:4px"></i>Station Details</div>
+            <div class="form-grid">
+              <div class="form-group full"><label class="form-label">Station name</label><input class="form-input" value="Colombo Central Service Station" /></div>
+              <div class="form-group"><label class="form-label">Phone</label><input class="form-input" value="+94 11 234 5678" /></div>
+              <div class="form-group"><label class="form-label">VAT registration</label><input class="form-input" value="VAT-123456789" /></div>
+              <div class="form-group full"><label class="form-label">Address</label><textarea class="form-textarea" style="min-height:52px">No. 42, Galle Road, Colombo 03</textarea></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ti ti-users" style="font-size:13px;margin-right:4px"></i>User Management</div>
+              <button class="btn-secondary btn-sm"><i class="ti ti-plus"></i> Add User</button>
+            </div>
+            <table>
+              <thead><tr><th>Name</th><th>Role</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>Ravi Amarasinghe</td><td>Super Admin</td><td><span class="badge badge-done">Active</span></td><td><button class="btn-secondary btn-sm">Edit</button></td></tr>
+                <tr><td>Saman Rathnayake</td><td>Service Advisor</td><td><span class="badge badge-done">Active</span></td><td><button class="btn-secondary btn-sm">Edit</button></td></tr>
+                <tr><td>Kasun Perera</td><td>Technician</td><td><span class="badge badge-done">Active</span></td><td><button class="btn-secondary btn-sm">Edit</button></td></tr>
+                <tr><td>Priya Kumari</td><td>Technician</td><td><span class="badge badge-done">Active</span></td><td><button class="btn-secondary btn-sm">Edit</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px"><i class="ti ti-bell" style="font-size:13px;margin-right:4px"></i>Notifications</div>
+            <div class="toggle-row"><span>SMS — service reminders</span><input type="checkbox" checked /></div>
+            <div class="toggle-row"><span>Email — estimate approvals</span><input type="checkbox" checked /></div>
+            <div class="toggle-row"><span>SMS — vehicle ready alerts</span><input type="checkbox" checked /></div>
+            <div class="toggle-row"><span>Multi-factor authentication</span><input type="checkbox" /></div>
+            <div class="toggle-row"><span>Low stock email alerts</span><input type="checkbox" checked /></div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:12px"><i class="ti ti-receipt" style="font-size:13px;margin-right:4px"></i>Billing Defaults</div>
+            <div class="form-grid">
+              <div class="form-group"><label class="form-label">VAT rate (%)</label><input class="form-input" value="18" /></div>
+              <div class="form-group"><label class="form-label">Default currency</label><select class="form-select"><option>LKR</option><option>USD</option></select></div>
+              <div class="form-group"><label class="form-label">Payment methods</label><select class="form-select"><option>Cash, Card, Online</option></select></div>
+              <div class="form-group"><label class="form-label">Invoice prefix</label><input class="form-input" value="INV-" /></div>
+              <div class="form-group full"><label class="form-label">Invoice footer note</label><textarea class="form-textarea" style="min-height:52px">Thank you for choosing our service. Warranty valid 30 days from date of service.</textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div></div><script>
+var titles = {
+  dashboard:'Dashboard', jobcards:'Job Cards', newjob:'New Job Card',
+  jobdetail:'Job Card #JC-1082', customers:'Customers & Vehicles',
+  appointments:'Appointments', inventory:'Inventory',
+  billing:'Billing & Payments', reports:'Reports & Analytics',
+  portal:'Vehicle Owner Portal', settings:'Settings'
+};
+
+function go(id, navEl) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var s = document.getElementById('screen-' + id);
+  if (s) s.classList.add('active');
+  var t = document.getElementById('topbar-title');
+  if (t && titles[id]) t.textContent = titles[id];
+  if (navEl) {
+    document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+    navEl.classList.add('active');
+  }
+}
+</script>
+</body>
+</html>
