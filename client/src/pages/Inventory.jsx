@@ -147,7 +147,7 @@ const POModal = ({ isOpen, onClose, onSend }) => {
           <div className="text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">Line Items</div>
           <div className="space-y-2">
             {lines.map((l, i) => (
-              <div key={i} className="flex gap-2">
+              <div key={i} className="flex flex-wrap gap-2">
                 <input
                   className="flex-1 h-[42px] px-3 bg-white border border-slate-200 text-slate-800 text-sm rounded-lg focus:outline-none focus:border-brandBlue"
                   placeholder="SKU"
@@ -197,7 +197,7 @@ const CategoryModal = ({ isOpen, onClose, categories, onAdd, onDelete, adding, d
       footer={<button className="btn-secondary" onClick={onClose} id="cat-close-btn">Close</button>}
     >
       <div className="space-y-4">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <input
             id="cat-new-name"
             className="flex-1 h-[42px] px-3 bg-white border border-slate-200 text-slate-800 text-sm rounded-lg focus:outline-none focus:border-brandBlue"
@@ -544,12 +544,12 @@ export const Inventory = () => {
   return (
     <div className="space-y-[18px]">
       {/* Page Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-[17px] font-semibold text-slate-800">Inventory</div>
           <div className="text-[12px] text-slate-500 mt-0.5">Spare parts, consumables, and stock levels</div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button id="inv-export-btn" className="btn-secondary !h-8 !px-3 !text-xs flex items-center gap-1.5" onClick={handleExport}>
             <IconDownload size={13} /> Export
           </button>
@@ -654,7 +654,7 @@ export const Inventory = () => {
             </>
           }
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <TextInput label="Item Name"  id="ed-name"  defaultValue={editItem.name}      />
             {canSeeCost && (
               <TextInput label="Buying Price" id="ed-buying-price" defaultValue={editItem.buyingPrice ?? ''} type="number" />

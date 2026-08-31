@@ -53,7 +53,7 @@ const TASKS = [
 const StatusTracker = ({ current, onChange }) => {
   const currentIdx = STATUS_STEPS.indexOf(current)
   return (
-    <div className="flex items-center bg-white border border-slate-100 rounded-lg px-5 py-3 mb-5">
+    <div className="flex items-center bg-white border border-slate-100 rounded-lg px-5 py-3 mb-5 overflow-x-auto">
       {STATUS_STEPS.map((step, i) => {
         const isDone = i < currentIdx
         const isActive = i === currentIdx
@@ -459,12 +459,12 @@ export const JobCardDetails = () => {
   return (
     <div className="space-y-0">
       {/* Page Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-4">
         <div>
           <div className="text-[17px] font-semibold text-slate-800">#{jobDetails.title}</div>
           <div className="text-[12px] text-slate-500 mt-0.5">{jobDetails.sub}</div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             id="jd-back-btn"
             className="btn-secondary !h-8 !px-3 !text-xs flex items-center gap-1.5"

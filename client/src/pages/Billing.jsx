@@ -263,12 +263,12 @@ export const Billing = () => {
   return (
     <div className="space-y-[18px]">
       {/* Page Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-[17px] font-semibold text-slate-800">Billing &amp; Payments</div>
           <div className="text-[12px] text-slate-500 mt-0.5">Invoices, receipts, and outstanding balances</div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button id="bill-export-btn" className="btn-secondary !h-8 !px-3 !text-xs flex items-center gap-1.5" onClick={handleExport}>
             <IconDownload size={13} /> Export
           </button>
