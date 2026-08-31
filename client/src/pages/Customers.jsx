@@ -72,7 +72,7 @@ const AddCustomerModal = ({ isOpen, onClose, onSave }) => {
           <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2.5 pb-1.5 border-b border-slate-100">
             Customer Details
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <TextInput label="First Name"      id="cust-firstname"  placeholder="e.g. Amara"    value={form.firstName}  onChange={set('firstName')}  required />
             <TextInput label="Last Name"       id="cust-lastname"   placeholder="e.g. Silva"    value={form.lastName}   onChange={set('lastName')}   required />
             <TextInput label="Phone Number"    id="cust-phone"      placeholder="e.g. 0771234567"     value={form.phone}      onChange={set('phone')}      required />
@@ -85,7 +85,7 @@ const AddCustomerModal = ({ isOpen, onClose, onSave }) => {
           <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2.5 pb-1.5 border-b border-slate-100">
             Primary Vehicle
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <TextInput label="Registration No." id="cust-vreg"   placeholder="e.g. CBS-8154"    value={form.vehicleReg}      onChange={set('vehicleReg')} required />
             <TextInput label="Vehicle Make"     id="cust-vmake"  placeholder="e.g. Toyota"      value={form.vehicleMake}     onChange={set('vehicleMake')} required />
             <TextInput label="Vehicle Model"    id="cust-vmodel" placeholder="e.g. Aqua"        value={form.vehicleModel}    onChange={set('vehicleModel')} required />
@@ -147,7 +147,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd }) => {
         </>
       }
     >
-      <form id="add-vehicle-form" onSubmit={handleSubmit} className="grid grid-cols-2 gap-3">
+      <form id="add-vehicle-form" onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <TextInput label="Registration No." id="avm-reg"   placeholder="e.g. CBS-8154" value={form.regNo}   onChange={set('regNo')}   required />
         <TextInput label="Make"             id="avm-make"  placeholder="e.g. Toyota"   value={form.make}    onChange={set('make')}    required />
         <TextInput label="Model"            id="avm-model" placeholder="e.g. Aqua"     value={form.model}   onChange={set('model')}   required />
@@ -276,12 +276,12 @@ const TransferOwnershipModal = ({ isOpen, onClose, vehicle, onTransfer }) => {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <TextInput label="First Name"     id="tvo-firstname" value={newOwner.firstName} onChange={setNewOwnerField('firstName')} required />
             <TextInput label="Last Name"      id="tvo-lastname"  value={newOwner.lastName}  onChange={setNewOwnerField('lastName')}  required />
             <TextInput label="Phone Number"   id="tvo-phone"     value={newOwner.phone}     onChange={setNewOwnerField('phone')}      required />
             <TextInput label="Email Address"  id="tvo-email"     type="email" value={newOwner.email} onChange={setNewOwnerField('email')} />
-            <TextInput label="NIC / Passport" id="tvo-nic"       value={newOwner.nicPassport} onChange={setNewOwnerField('nicPassport')} required className="col-span-2" />
+            <TextInput label="NIC / Passport" id="tvo-nic"       value={newOwner.nicPassport} onChange={setNewOwnerField('nicPassport')} required className="sm:col-span-2" />
           </div>
         )}
       </div>
@@ -431,7 +431,7 @@ const CustomerDetailsModal = ({ isOpen, onClose, customer, onSaved }) => {
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 pb-1.5 border-b border-slate-100">
             Customer Primary Data
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <TextInput
               label="First Name"
               id="cedit-firstname"
@@ -521,7 +521,7 @@ const CustomerDetailsModal = ({ isOpen, onClose, customer, onSaved }) => {
                       </button>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <TextInput
                       label="Reg No."
                       id={`cedit-v${idx}-reg`}
@@ -711,7 +711,7 @@ export const Customers = () => {
   return (
     <div className="space-y-[18px]">
       {/* Page Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-[17px] font-semibold text-slate-800">Customers &amp; Vehicles</div>
           <div className="text-[12px] text-slate-500 mt-0.5">Manage customer profiles and linked vehicles</div>

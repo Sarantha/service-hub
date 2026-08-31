@@ -1,19 +1,29 @@
 import React from 'react'
-import { IconSearch, IconBell, IconHelpCircle, IconChevronDown } from '@tabler/icons-react'
+import { IconSearch, IconBell, IconHelpCircle, IconChevronDown, IconMenu2 } from '@tabler/icons-react'
 import { useAuth } from '../context/AuthContext'
 
 const ALL_BRANCHES_VALUE = 'all'
 
-export const Topbar = () => {
+export const Topbar = ({ onMenuClick = () => {} }) => {
   const { hasRole, activeBranchId, setActiveBranch, branches } = useAuth()
   const isSuperAdmin = hasRole('Super Admin')
   const activeBranches = branches.filter((b) => b.isActive)
 
   return (
-    <header className="h-16 bg-white border-b border-slate-100 shadow-sm flex items-center justify-between px-6 z-10 shrink-0">
-      {/* Left section: Global Search */}
-      <div className="flex items-center flex-1 max-w-md">
-        <div className="relative w-full">
+    <header className="h-16 bg-white border-b border-slate-100 shadow-sm flex items-center justify-between gap-2 px-3 sm:px-6 z-10 shrink-0">
+      {/* Hamburger — mobile/tablet only, opens the sidebar drawer */}
+      <button
+        onClick={onMenuClick}
+        className="md:hidden h-9 w-9 flex items-center justify-center text-slate-600 hover:text-brandBlue hover:bg-slate-50 rounded-lg transition-colors cursor-pointer shrink-0"
+        aria-label="Open menu"
+        type="button"
+      >
+        <IconMenu2 size={20} />
+      </button>
+
+      {/* Left section: Global Search — collapses to icon-only below sm */}
+      <div className="flex items-center flex-1 min-w-0 sm:max-w-md">
+        <div className="relative w-full hidden sm:block">
           <span className="absolute inset-y-0 left-3 flex items-center text-slate-400 pointer-events-none">
             <IconSearch size={16} />
           </span>
@@ -24,10 +34,17 @@ export const Topbar = () => {
             id="global-search"
           />
         </div>
+        <button
+          className="sm:hidden h-9 w-9 flex items-center justify-center text-slate-500 hover:text-brandBlue hover:bg-slate-50 rounded-lg transition-colors cursor-pointer border border-slate-100 bg-white"
+          aria-label="Search"
+          type="button"
+        >
+          <IconSearch size={17} />
+        </button>
       </div>
 
       {/* Right section: Controls & Branch Selector */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-1.5 sm:gap-4 shrink-0">
         {/* Branch Selector — Super Admin only. Advisor/Technician belong to
             exactly one branch, so a switcher would be misleading for them. */}
         {isSuperAdmin && (

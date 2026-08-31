@@ -59,7 +59,7 @@ const VEHICLE_INVENTORY_ITEMS = [
 ]
 
 const StepIndicator = ({ current }) => (
-  <div className="flex items-center bg-white border border-slate-100 rounded-lg px-5 py-3 mb-5">
+  <div className="flex items-center bg-white border border-slate-100 rounded-lg px-5 py-3 mb-5 overflow-x-auto">
     {STEPS.map((label, i) => {
       const isDone = i < current
       const isActive = i === current
@@ -766,12 +766,12 @@ export const JobCardNew = () => {
   return (
     <div className="space-y-0">
       {/* Page Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-4">
         <div>
           <div className="text-[17px] font-semibold text-slate-800">New Job Card</div>
           <div className="text-[12px] text-slate-500 mt-0.5">Vehicle intake and work order creation</div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             id="jn-cancel-btn"
             className="btn-secondary !h-8 !px-3 !text-xs"

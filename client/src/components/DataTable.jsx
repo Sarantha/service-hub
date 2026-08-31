@@ -79,8 +79,8 @@ export const DataTable = ({
       </table>
 
       {showPagination && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-white">
-          <div className="text-xs font-normal text-slate-500">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-4 border-t border-slate-100 bg-white">
+          <div className="text-xs font-normal text-slate-500 text-center sm:text-left">
             {totalItems > 0 ? (
               <>
                 Showing <span className="font-semibold text-slate-800">{startEntry}</span> to{' '}
@@ -95,7 +95,7 @@ export const DataTable = ({
             )}
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <button
               onClick={() => onPageChange && onPageChange(currentPage - 1)}
               disabled={currentPage <= 1}

@@ -114,7 +114,7 @@ const BookingModal = ({ isOpen, onClose, onBook }) => {
       }
     >
       <form id="booking-form" onSubmit={handleSubmit} className="space-y-3">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <TextInput
             label="Customer Name" id="appt-customer" placeholder="Full name"
             value={form.customer} onChange={set('customer')} required
@@ -143,7 +143,7 @@ const BookingModal = ({ isOpen, onClose, onBook }) => {
             label="Time" id="appt-time" type="time"
             value={form.time} onChange={set('time')} required
           />
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <TextArea
               label="Notes" id="appt-notes" placeholder="Any special instructions or customer requests…"
               value={form.notes} onChange={set('notes')} rows={2}
@@ -211,7 +211,7 @@ const RescheduleModal = ({ appointment, onClose, onReschedule }) => {
       }
     >
       <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <TextInput label="New Date" id="resch-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
           <TextInput label="New Time" id="resch-time" type="time" value={time} onChange={(e) => setTime(e.target.value)} required />
         </div>
@@ -357,7 +357,7 @@ export const Appointments = () => {
   return (
     <div className="space-y-[18px]">
       {/* Page Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-[17px] font-semibold text-slate-800">Appointments</div>
           <div className="text-[12px] text-slate-500 mt-0.5">Upcoming bookings and scheduling</div>
