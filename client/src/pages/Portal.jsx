@@ -188,7 +188,7 @@ const RescheduleModal = ({ appointment, token, onClose, onDone }) => {
       }
     >
       <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <TextInput label="New Date" id="portal-resch-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
           <TextInput label="New Time" id="portal-resch-time" type="time" value={time} onChange={(e) => setTime(e.target.value)} required />
         </div>

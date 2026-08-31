@@ -12,9 +12,10 @@ import {
   IconPackage,
   IconUserCircle,
   IconSettings,
+  IconX,
 } from '@tabler/icons-react'
 
-export const Sidebar = () => {
+export const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
   const { user, logout } = useAuth()
   const sections = [
     {
@@ -60,16 +61,41 @@ export const Sidebar = () => {
     .filter(section => section.items.length > 0)
 
   return (
-    <div className="w-[204px] bg-navy flex flex-col shrink-0 h-screen select-none">
+    <>
+      {/* Backdrop — mobile only, closes the drawer on tap */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+
+      <div
+        className={`fixed inset-y-0 left-0 z-40 w-[240px] bg-navy flex flex-col shrink-0 h-screen select-none
+          transform transition-transform duration-200 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          md:static md:z-auto md:w-[204px] md:translate-x-0`}
+      >
       {/* Logo Section */}
-      <div className="py-4 px-4 border-b border-white/10 shrink-0">
-        <div className="flex items-center gap-1.5 text-white font-semibold text-[15px]">
-          <IconTool size={16} className="text-blueGlow" />
-          <span>ServiceHub</span>
+      <div className="py-4 px-4 border-b border-white/10 shrink-0 flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-1.5 text-white font-semibold text-[15px]">
+            <IconTool size={16} className="text-blueGlow" />
+            <span>ServiceHub</span>
+          </div>
+          <div className="text-[10px] text-white/40 mt-0.5 font-medium">
+            Station Management System
+          </div>
         </div>
-        <div className="text-[10px] text-white/40 mt-0.5 font-medium">
-          Station Management System
-        </div>
+        <button
+          onClick={onClose}
+          className="md:hidden text-white/50 hover:text-white p-1 -mr-1"
+          aria-label="Close menu"
+          type="button"
+        >
+          <IconX size={18} />
+        </button>
       </div>
 
       {/* Navigation Sections */}
@@ -84,8 +110,9 @@ export const Sidebar = () => {
                 <NavLink
                   key={itemIdx}
                   to={item.path}
+                  onClick={onClose}
                   className={({ isActive }) =>
-                    `flex items-center gap-2 py-2 px-4 cursor-pointer text-[12px] transition-all hover:bg-white/5 border-r-2 ${
+                    `flex items-center gap-2 py-2.5 px-4 cursor-pointer text-[13px] transition-all hover:bg-white/5 border-r-2 ${
                       isActive
                         ? 'bg-brandBlue/55 text-white border-r-[#4A9EE8]'
                         : 'text-white/50 border-r-transparent hover:text-white/80'
@@ -106,8 +133,9 @@ export const Sidebar = () => {
         {user?.role === 'Super Admin' && (
           <NavLink
             to="/settings"
+            onClick={onClose}
             className={({ isActive }) =>
-              `flex items-center gap-2 py-2 px-4 cursor-pointer text-[12px] transition-all hover:bg-white/5 border-r-2 ${
+              `flex items-center gap-2 py-2.5 px-4 cursor-pointer text-[13px] transition-all hover:bg-white/5 border-r-2 ${
                 isActive
                   ? 'bg-brandBlue/55 text-white border-r-[#4A9EE8]'
                   : 'text-white/50 border-r-transparent hover:text-white/80'
@@ -138,7 +166,8 @@ export const Sidebar = () => {
           </div>
         </button>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 
